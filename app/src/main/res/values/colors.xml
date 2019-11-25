@@ -3,5 +3,6 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="magenta">#FF0900</color>
+    <color name="magenta">#FF09FF</color>
+    <color name="player">#FF0000</color>
 </resources>

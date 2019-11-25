@@ -7,7 +7,7 @@ import android.view.SurfaceHolder;
 import java.util.zip.Checksum;
 
 class GameLoop extends Thread{
-    private static final double MAX_UPS = 60;
+    public static final double MAX_UPS = 60;
     private static final double UPS_PERIOD = 1E+3/MAX_UPS;
     private boolean isRunnig=false;
     private SurfaceHolder surfaceHolder;
@@ -42,7 +42,7 @@ class GameLoop extends Thread{
         int frameCount = 0;
 
         long startTime;
-        long elapsedTime;
+        long elapsedTime=0;
         long sleepTime;
 
 
@@ -72,8 +72,6 @@ class GameLoop extends Thread{
                     }
                 }
             }
-
-
             
             elapsedTime = System.currentTimeMillis() - startTime;
             sleepTime = (long)(updateCount*UPS_PERIOD - elapsedTime);

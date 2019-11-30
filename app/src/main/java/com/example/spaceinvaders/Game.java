@@ -3,6 +3,7 @@ package com.example.spaceinvaders;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -14,19 +15,24 @@ import android.view.WindowManager;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
 
 class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     private final Player player;
-    private final Enemy enemy;
     public static int widthScreen;
     public static int heightScreen;
     private GameLoop gameLoop;
     public static ArrayList<GameObject> gameObjects;
+    private ArrayList<Enemy> enemies;
+    private long lastEnemy;
 
     public Game(Context context, WindowManager windowManager){
         super(context);
+        lastEnemy=0;
         gameObjects = new ArrayList<GameObject>();
+        enemies = new ArrayList<Enemy>();
 
         Display display = windowManager.getDefaultDisplay();
         Point size = new Point();
@@ -39,8 +45,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this,surfaceHolder);
 
         player = new Player(500,950,30,getContext());
-        enemy = new Enemy(500,100,30,getContext());
-        gameObjects.add(enemy);
         setFocusable(true);
     }
 
@@ -76,10 +80,13 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+
         drawFPS(canvas);
         drawUPS(canvas);
         player.draw(canvas);
-        enemy.draw(canvas);
+        for (Enemy e: enemies){
+            e.draw(canvas);
+        }
     }
 
     public void drawUPS(Canvas canvas){
@@ -102,6 +109,32 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         player.update();
-        enemy.update();
+        generateEnemies();
+        Iterator itr = enemies.iterator();
+        while (itr.hasNext())
+        {
+            Enemy i = (Enemy)itr.next();
+            if (i.isDestroyed){
+                itr.remove();
+                gameObjects.remove(i);
+            }else{
+                i.update();
+            }
+        }
+    }
+
+    private void generateEnemies() {
+
+        if ((System.currentTimeMillis()- lastEnemy) > 4000){
+            lastEnemy = System.currentTimeMillis();
+             int min = 0;
+             int max = widthScreen;
+             int randomX = new Random().nextInt((max - min) + 1) + min;
+             max = 200;
+             int randomY = new Random().nextInt((max - min) + 1) + min;
+             Enemy e = new Enemy(randomX,randomY,30,getContext());
+             enemies.add(e);
+             gameObjects.add(e);
+        }
     }
 }

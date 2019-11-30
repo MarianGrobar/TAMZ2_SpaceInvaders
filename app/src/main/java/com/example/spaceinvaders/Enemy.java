@@ -18,9 +18,9 @@ public class Enemy extends GameObject {
     private double velocityX;
     private boolean movingRight;
     private boolean movingLeft;
-    private boolean isDestroyed;
+    public boolean isDestroyed;
 
-    private ArrayList<Shot> shots;
+    public ArrayList<Shot> shots;
     private long lastShot;
 
 
@@ -65,9 +65,9 @@ public class Enemy extends GameObject {
             }
         }
 
-/*        if ((System.currentTimeMillis()- lastShot) > 800){
+        if ((System.currentTimeMillis()- lastShot) > 1000){
             lastShot = System.currentTimeMillis();
-            shots.add(new Shot(this.positionX,this.positionY-this.radius-10,10,context));
+            shots.add(new Shot(this.positionX,this.positionY+this.radius+10,10,context));
         }
 
         Iterator itr = shots.iterator();
@@ -75,14 +75,12 @@ public class Enemy extends GameObject {
         {
             Shot i = (Shot)itr.next();
 
-            if (i.GetPositionY()<0){
+            if (i.GetPositionY()>Game.heightScreen){
                 itr.remove();
             }else{
-                i.update();
+                i.update(1);
             }
-        }*/
-
-
+        }
     }
 
     @Override

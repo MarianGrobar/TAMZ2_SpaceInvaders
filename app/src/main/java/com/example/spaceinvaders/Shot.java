@@ -28,9 +28,9 @@ public class Shot extends GameObject {
         canvas.drawCircle((float)positionX, (float)positionY,(float)radius,paint);
         }
 
-    public void update() {
+    public void update(int direction) {
         velocityY = 1 * Player.MAX_SPEED;
-        this.positionY -= velocityY;
+        this.positionY = this.positionY + (velocityY * direction);
     }
 
     public double GetPositionY(){

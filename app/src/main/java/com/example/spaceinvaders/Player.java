@@ -3,6 +3,7 @@ package com.example.spaceinvaders;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -68,7 +69,7 @@ public class Player extends GameObject {
             if (i.GetPositionY()<0){
                 itr.remove();
             }else{
-                i.update();
+                i.update(-1);
             }
         }
 
@@ -86,6 +87,17 @@ public class Player extends GameObject {
 
                 if (distance < item.radius + shot.radius) {
                     item.destroyed();
+                }
+
+            }
+            for ( Shot shot: ((Enemy) item).shots ){
+
+                double dx = shot.positionX - this.positionX;
+                double dy = shot.positionY - this.positionY;
+                double distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < this.radius + shot.radius) {
+                    this.destroyed();
                 }
             }
         }
@@ -110,6 +122,6 @@ public class Player extends GameObject {
 
     @Override
     public void destroyed() {
-
+        
     }
 }

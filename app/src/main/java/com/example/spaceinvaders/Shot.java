@@ -8,11 +8,8 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
-public class Shot {
+public class Shot extends GameObject {
 
-    private double positionX;
-    private double positionY;
-    private double radius;
     private Paint paint;
     private double velocityY;
 
@@ -32,11 +29,16 @@ public class Shot {
         }
 
     public void update() {
-        velocityY = 0.5 * Player.MAX_SPEED;
+        velocityY = 1 * Player.MAX_SPEED;
         this.positionY -= velocityY;
     }
 
     public double GetPositionY(){
         return this.positionY;
+    }
+
+    @Override
+    public void destroyed() {
+
     }
 }

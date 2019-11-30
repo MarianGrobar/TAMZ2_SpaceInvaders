@@ -9,7 +9,8 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Player extends GameObject {
+public class Enemy extends GameObject {
+
     private static final double SPEED_PIXELS_PER_SECOND = 200.0;
     public static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private final Context context;
@@ -17,13 +18,13 @@ public class Player extends GameObject {
     private double velocityX;
     private boolean movingRight;
     private boolean movingLeft;
-
+    private boolean isDestroyed;
 
     private ArrayList<Shot> shots;
     private long lastShot;
 
 
-    public Player(double positionX, double positionY, double radius, Context context){
+    public Enemy(double positionX, double positionY, double radius, Context context){
 
         this.positionX = positionX;
         this.positionY = positionY;
@@ -33,8 +34,10 @@ public class Player extends GameObject {
 
         shots = new ArrayList<Shot>();
         paint = new Paint();
-        int color = ContextCompat.getColor(this.context,R.color.player);
+        int color = ContextCompat.getColor(this.context,R.color.enemy);
         paint.setColor(color);
+        movingRight=true;
+        isDestroyed = false;
     }
 
     public void draw(Canvas canvas) {
@@ -45,21 +48,28 @@ public class Player extends GameObject {
     }
 
     public void update() {
-        if (movingRight){
-            velocityX = 1 * MAX_SPEED;
-            this.positionX += velocityX;
+
+        if (!isDestroyed){
+            if (movingRight && this.positionX+this.radius < Game.widthScreen){
+                velocityX = 1 * MAX_SPEED;
+                this.positionX += velocityX;
+            }
+            else if (movingLeft && this.positionX-this.radius > 0){
+                velocityX = 1 * MAX_SPEED;
+                this.positionX -= velocityX;
+            }else{
+
+                movingRight = !movingRight;
+                movingLeft = !movingLeft;
+                this.positionY = this.positionY + this.radius*2;
+            }
         }
-        else if(movingLeft && this.positionX-this.radius > 0){
-            velocityX = 1 * MAX_SPEED;
-            this.positionX -= velocityX;
-        }
-        if ((System.currentTimeMillis()- lastShot) > 800){
+
+/*        if ((System.currentTimeMillis()- lastShot) > 800){
             lastShot = System.currentTimeMillis();
             shots.add(new Shot(this.positionX,this.positionY-this.radius-10,10,context));
         }
 
-        collision(Game.gameObjects);
-        
         Iterator itr = shots.iterator();
         while (itr.hasNext())
         {
@@ -70,46 +80,13 @@ public class Player extends GameObject {
             }else{
                 i.update();
             }
-        }
+        }*/
 
 
-
-    }
-
-    private void collision(ArrayList<GameObject> gameObjects) {
-        for (GameObject item: gameObjects) {
-            for (Shot shot: shots){
-
-                double dx = item.positionX - shot.positionX;
-                double dy = item.positionY - shot.positionY;
-                double distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < item.radius + shot.radius) {
-                    item.destroyed();
-                }
-            }
-        }
-    }
-
-    public void moving(double positionX) {
-        if (positionX > this.positionX)
-        {
-            movingRight = true;
-            movingLeft = false;
-
-        }else if (positionX < this.positionX){
-            movingLeft = true;
-            movingRight = false;
-        }
-    }
-
-    public void stopMoving() {
-         movingRight = false;
-         movingLeft = false;
     }
 
     @Override
     public void destroyed() {
-
+        isDestroyed = true;
     }
 }

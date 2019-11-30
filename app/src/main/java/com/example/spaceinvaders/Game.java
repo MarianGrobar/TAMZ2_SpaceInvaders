@@ -3,29 +3,44 @@ package com.example.spaceinvaders;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.core.content.ContextCompat;
+
+import java.util.ArrayList;
 
 class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     private final Player player;
+    private final Enemy enemy;
+    public static int widthScreen;
+    public static int heightScreen;
     private GameLoop gameLoop;
-    public static int Width;
-    public static int Height;
+    public static ArrayList<GameObject> gameObjects;
 
-    public Game(Context context){
+    public Game(Context context, WindowManager windowManager){
         super(context);
+        gameObjects = new ArrayList<GameObject>();
 
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        widthScreen = size.x;
+        heightScreen = size.y;
 
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         gameLoop = new GameLoop(this,surfaceHolder);
 
-        player = new Player(500,650,30,getContext());
+        player = new Player(500,950,30,getContext());
+        enemy = new Enemy(500,100,30,getContext());
+        gameObjects.add(enemy);
         setFocusable(true);
     }
 
@@ -64,6 +79,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawFPS(canvas);
         drawUPS(canvas);
         player.draw(canvas);
+        enemy.draw(canvas);
     }
 
     public void drawUPS(Canvas canvas){
@@ -86,5 +102,6 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         player.update();
+        enemy.update();
     }
 }

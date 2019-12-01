@@ -60,36 +60,43 @@ public class Player extends GameObject {
         }
 
         collision(Game.gameObjects);
-        
-        Iterator itr = shots.iterator();
-        while (itr.hasNext())
-        {
-            Shot i = (Shot)itr.next();
 
-            if (i.GetPositionY()<0){
-                itr.remove();
-            }else{
-                i.update(-1);
-            }
+        for(Shot shot: shots){
+
+            shot.update(-1);
         }
-
-
-
     }
 
     private void collision(ArrayList<GameObject> gameObjects) {
         for (GameObject item: gameObjects) {
-            for (Shot shot: shots){
+
+            Iterator itr = shots.iterator();
+            while (itr.hasNext())
+            {
+                Shot shot = (Shot)itr.next();
+
+                double dxFollow = item.positionX - shot.positionX;
+                double dyFollow = item.positionY - shot.positionY;
+                double distanceFollow = Math.sqrt(dxFollow * dxFollow + dyFollow * dyFollow);
+
+                if (distanceFollow < item.radius + shot.followRadius) {
+                    shot.follow(item);
+                }
 
                 double dx = item.positionX - shot.positionX;
                 double dy = item.positionY - shot.positionY;
                 double distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < item.radius + shot.radius) {
-                    item.destroyed();
+                    //item.destroyed();
+                    itr.remove();
                 }
-
+                if (shot.positionY<0){
+                    itr.remove();
+                }
             }
+
+/*            //Enemy shooting
             for ( Shot shot: ((Enemy) item).shots ){
 
                 double dx = shot.positionX - this.positionX;
@@ -99,7 +106,7 @@ public class Player extends GameObject {
                 if (distance < this.radius + shot.radius) {
                     this.destroyed();
                 }
-            }
+            }*/
         }
     }
 
@@ -122,6 +129,6 @@ public class Player extends GameObject {
 
     @Override
     public void destroyed() {
-        
+
     }
 }

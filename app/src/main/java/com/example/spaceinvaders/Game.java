@@ -44,6 +44,11 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         surfaceHolder.addCallback(this);
         gameLoop = new GameLoop(this,surfaceHolder);
 
+        Enemy e = new Enemy(300,150,30,getContext());
+        enemies.add(e);
+        gameObjects.add(e);
+
+
         player = new Player(500,950,30,getContext());
         setFocusable(true);
     }
@@ -125,7 +130,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     private void generateEnemies() {
 
-        if ((System.currentTimeMillis()- lastEnemy) > 4000){
+/*        if ((System.currentTimeMillis()- lastEnemy) > 4000){
             lastEnemy = System.currentTimeMillis();
              int min = 0;
              int max = widthScreen;
@@ -135,6 +140,8 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
              Enemy e = new Enemy(randomX,randomY,30,getContext());
              enemies.add(e);
              gameObjects.add(e);
-        }
+        }*/
+
+
     }
 }
